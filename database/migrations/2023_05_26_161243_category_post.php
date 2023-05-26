@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('category_posts', function (Blueprint $table) {
             $table->id();
-            $table->longText('encoded_image')->nullable();
+            $table
+                ->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table
                 ->foreign('post_id')
                 ->references('id')
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('category_posts');
     }
 };
