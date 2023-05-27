@@ -20,12 +20,11 @@ return new class extends Migration
             $table->integer('views');
             $table->enum('status', ['under_review', 'accepted', 'rejected', 'hidden'])->default('under_review');
             $table->string('slug');
+            $table->unsignedBigInteger('user_id');
             $table
                 ->foreign('user_id')
                 ->references('id')
-                ->on('users')
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
+                ->on('users');
             $table->timestamps();
         });
     }

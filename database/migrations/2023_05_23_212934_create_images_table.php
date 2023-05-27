@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->longText('encoded_image')->nullable();
+            $table->unsignedBigInteger('post_id');
             $table
                 ->foreign('post_id')
                 ->references('id')
