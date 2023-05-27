@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\ReturnResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +12,20 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
 
 class AuthController extends Controller {
+    use ReturnResponse;
 
     public function signUp (Request $request) {
         // writing the rules to validate register data
         $rules = [
-            'name' => 'required|string|max:255',
+            'first_name_en' => 'required|string|max:255|regex:/^[a-zA-Z& ]+$/',
+            'last_name_en' => 'required|string|max:255|regex:/^[a-zA-Z& ]+$/',
+            'first_name_ar' => 'required|string|max:255|regex:/^[\p{Arabic} ]+$/u',
+            'last_name_ar' => 'required|string|max:255|regex:/^[\p{Arabic} ]+$/u',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|max:255|confirmed|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'phone_number' => 'required|numeric',
+            'gender' => 'required|in:male,female',
+            'role' => 'required|in:user,admin',
         ];
 
         // validate register data with the previous rules
@@ -41,13 +49,10 @@ class AuthController extends Controller {
         $user->save();
 
         // add token to the user
-//        $tokenResult = $user->createToken('Personal Access Token');
         $user['token'] = $user->createToken('access_token')->accessToken;
         auth()->login($user);
 
-        return response()->json([
-            'user' => $user,
-        ],  200);
+        return $this->returnData('user', $user, 'User registered successfully.');
     }
 
     public function logIn (Request $request) {
@@ -58,7 +63,7 @@ class AuthController extends Controller {
         // writing the rules to validate register data
         $rules = [
             'email' => 'required|string|email',
-            'password' => 'required|string',
+            'password' => 'required',
         ];
 
         // validate register data with the previous rules
@@ -84,10 +89,7 @@ class AuthController extends Controller {
             $user['token'] = $user->createToken('access_token')->accessToken;
         }
 
-        return response()->json([
-            'message' => 'User login successfully',
-            'user' => $user,
-        ]);
+        return $this->returnData('user', $user, 'User login successfully');
     }
 
     public function logOut (Request $request) {
@@ -96,8 +98,6 @@ class AuthController extends Controller {
         if ($user instanceof User){
             $user->token()->delete();
         }
-        return \response()->json([
-            'message' => 'Logged out successfully.'
-        ]);
+        return $this->returnSuccessMessage('Logged out successfully.');
     }
 }
