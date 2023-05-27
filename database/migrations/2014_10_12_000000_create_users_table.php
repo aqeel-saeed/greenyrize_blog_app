@@ -19,18 +19,12 @@ return new class extends Migration
             $table->string('last_name_ar');
             $table->longText('encoded_image')->nullable();
             $table->string('phone_number')->unique();
-            $table->enum('Gender',['male','female']);
+            $table->enum('gender',['male','female']);
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table
-                ->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
             $table->timestamps();
         });
     }
