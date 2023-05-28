@@ -28,9 +28,18 @@ class AuthController extends Controller {
             'role' => 'required|in:user,admin',
         ];
 
+        $errors = [
+            // add custom message for the format error
+            'first_name_en.regex' => 'The first_name_en must include only english letters.',
+            'first_name_ar.regex' => 'The first_name_ar must include only arabic letters.',
+            'last_name_en.regex' => 'The last_name_en must include only english letters.',
+            'last_name_ar.regex' => 'The last_name_ar must include only arabic letters.',
+            'password.regex' => 'The password must include letters, numbers, and special symbols.',
+        ];
+
         // validate register data with the previous rules
         $input = $request->all();
-        $validator = Validator::make($input, $rules);
+        $validator = Validator::make($input, $rules, $errors);
 
         // if validator fails, return all errors with details to know how to be valid
         if ($validator->fails()) {
