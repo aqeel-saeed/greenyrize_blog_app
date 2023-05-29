@@ -18,8 +18,7 @@ return new class extends Migration
             $table->longText('content_en');
             $table->longText('content_ar');
             $table->integer('views');
-            $table->enum('status', ['under_review', 'accepted', 'rejected', 'hidden'])->default('under_review');
-            $table->string('slug');
+            $table->enum('status', ['under_review', 'accepted', 'rejected'])->default('under_review');
             $table->unsignedBigInteger('user_id');
             $table
                 ->foreign('user_id')
