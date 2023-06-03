@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsLetterEmail;
 use App\Models\User;
 use App\Traits\ReturnResponse;
 use Illuminate\Http\Request;
@@ -60,6 +61,10 @@ class AuthController extends Controller {
         // add token to the user
         $user['token'] = $user->createToken('access_token')->accessToken;
         auth()->login($user);
+
+        NewsLetterEmail::create([
+            'email' => $input['email'],
+        ]);
 
         return $this->returnData('user', $user, 'User registered successfully.');
     }
