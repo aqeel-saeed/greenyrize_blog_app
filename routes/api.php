@@ -30,5 +30,28 @@ Route::group([
     Route::put('/{id}', [CategoryController::class, 'update']);
     Route::delete('/{id}', [CategoryController::class, 'destroy']);
 });
+Route::group([
+    'prefix' => '/posts',
+], function () {
+    Route::get('/', [PostController::class, 'index']);
+    Route::get('/{id}', [PostController::class, 'show']);
+    Route::get('/', [PostController::class, 'myPosts']);
+    Route::post('/', [PostController::class, 'store']);
+    Route::put('/{id}', [PostController::class, 'update']);
+    Route::delete('/{id}', [PostController::class, 'destroy']);
+    Route::get('/', [PostController::class, 'indexUnderReviewPosts']);
+    Route::put('/{id}', [PostController::class, 'updatePostStatus']);
+});
+
+Route::group([
+    'prefix' => '/profiles',
+], function () {
+    Route::get('/', [ProfileController::class, 'index']);
+    Route::get('/{id}', [ProfileController::class, 'show']);
+    Route::put('/{id}', [ProfileController::class, 'update']);
+    Route::delete('/{id}', [ProfileController::class, 'destroy']);
+    Route::delete('/', [ProfileController::class, 'destroyMyProfile']);
+});
 
 Route::post('/sendMail', [SendMailController::class, 'send']);
+Route::post('/email', [EmailController::class, 'send']);
