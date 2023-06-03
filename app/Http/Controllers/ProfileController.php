@@ -38,7 +38,7 @@ class ProfileController extends Controller {
         return $this->returnSuccessMessage('Profile showed successfully.');
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request) {
         // writing the rules to validate update data
         $rules = [
             'first_name_en' => 'string|max:255|regex:/^[a-zA-Z& ]+$/',
@@ -72,14 +72,30 @@ class ProfileController extends Controller {
             return $this->returnError(422, $validator->errors());
         }
 
-        $profile = User::find($id);
+//        $profile = User::find($id);
+        $user = $request->user();
 
-        if(is_null($profile)) {
+        $user->update($input);
+
+        return $this->returnData('user', $user, 'Profile updated successfully.');
+    }
+
+    public function destroy($id) {
+        $user = User::find($id);
+        if(is_null($user)) {
             return $this->returnError(404, 'Profile id is not valid.');
         }
 
-        $profile->update($input);
+        $user->delete();
 
-        return $this->returnData('user', $profile, 'Profile updated successfully.');
+        return $this->returnSuccessMessage('Profile deleted successfully.');
+    }
+
+    public function destroyMyProfile(Request $request) {
+        $user = $request->user();
+
+        $user->delete();
+
+        return $this->returnSuccessMessage('Profile deleted successfully.');
     }
 }
