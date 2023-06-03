@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SendMailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,17 +33,20 @@ Route::group([
     Route::put('/{id}', [CategoryController::class, 'update']);
     Route::delete('/{id}', [CategoryController::class, 'destroy']);
 });
+
+Route::post('/sendMail', [SendMailController::class, 'send']);
+
 Route::group([
     'prefix' => '/posts',
 ], function () {
     Route::get('/', [PostController::class, 'index']);
     Route::get('/{id}', [PostController::class, 'show']);
-    Route::get('/', [PostController::class, 'myPosts']);
+    Route::get('/myPosts', [PostController::class, 'myPosts']);
     Route::post('/', [PostController::class, 'store']);
     Route::put('/{id}', [PostController::class, 'update']);
     Route::delete('/{id}', [PostController::class, 'destroy']);
-    Route::get('/', [PostController::class, 'indexUnderReviewPosts']);
-    Route::put('/{id}', [PostController::class, 'updatePostStatus']);
+    Route::get('/underReview', [PostController::class, 'indexUnderReviewPosts']);
+    Route::put('/updateStatus/{id}', [PostController::class, 'updatePostStatus']);
 });
 
 Route::group([
@@ -50,8 +56,14 @@ Route::group([
     Route::get('/{id}', [ProfileController::class, 'show']);
     Route::put('/{id}', [ProfileController::class, 'update']);
     Route::delete('/{id}', [ProfileController::class, 'destroy']);
-    Route::delete('/', [ProfileController::class, 'destroyMyProfile']);
+    Route::delete('/deleteMyAccount', [ProfileController::class, 'destroyMyProfile']);
 });
 
-Route::post('/sendMail', [SendMailController::class, 'send']);
-Route::post('/email', [EmailController::class, 'send']);
+Route::group([
+    'prefix' => '/emails',
+], function () {
+    Route::get('/', [EmailController::class, 'index']);
+    Route::get('/{id}', [EmailController::class, 'show']);
+    Route::put('/{id}', [EmailController::class, 'update']);
+    Route::delete('/{id}', [EmailController::class, 'destroy']);
+});
