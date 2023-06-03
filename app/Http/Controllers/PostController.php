@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Image;
+use App\Models\NewsLetterEmail;
 use App\Models\Post;
 use App\Traits\ReturnResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\isEmpty;
 
@@ -220,6 +222,12 @@ class PostController extends Controller {
         ]);
 
         if ($input['status'] == 'accepted') {
+            // email with the new post
+            $mails = NewsLetterEmail::all();
+            foreach ($mails as $mail) {
+                Mail::to($mail['mail'])->send(new \App\Mail\Mail($input['title_en'], '', 'emails.newPostEmail'));
+            }
+
             return $this->returnSuccessMessage('Post accepted successfully.');
         }
 

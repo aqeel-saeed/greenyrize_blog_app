@@ -12,9 +12,9 @@ class SendMailController extends Controller {
 
         $mails = NewsLetterEmail::all();
         foreach ($mails as $mail) {
-            Mail::to($mail['mail'])->send(new \App\Mail\Mail($input['subject'], $input['message']));
+            Mail::to($mail['mail'])->send(new \App\Mail\Mail($input['subject'], $input['message'], 'emails.customEmail'));
         }
-        Mail::to($input['monitorEmail'])->send(new \App\Mail\Mail($input['subject'], $input['message']));
+        Mail::to($input['monitorEmail'])->send(new \App\Mail\Mail($input['subject'], $input['message'], 'emails.customEmail'));
 
         return response()->json([
             'message' => 'done!',

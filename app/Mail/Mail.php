@@ -15,15 +15,17 @@ class Mail extends Mailable
     private string $sub;
     private string $message;
     public array $data;
+    public string $viewName;
 
-    public function __construct($subject, $message) {
+    public function __construct($subject, $message, $viewName) {
         $this->sub = $subject;
         $this->message = $message;
         $this->data = [ 'subject' => $subject, 'message' => $message];
+        $this->viewName = $viewName;
     }
 
     public function build() {
-        return $this->view('emails.customEmail')->with('data', $this->data)
+        return $this->view($this->viewName)->with('data', $this->data)
             ->subject($this->sub);
     }
 }
