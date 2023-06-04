@@ -14,6 +14,7 @@ and then write the db name in the env file, run the xampp and run those commands
 
 ```
 php artisan migrate
+php artisan db:seed
 php artisan passport:install
 php artisan serve
 ```
