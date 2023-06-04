@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/signup', [AuthController::class, 'signUp']);
+Route::post('/signup', [AuthController::class, 'signUp'])->middleware(['auth:api', 'admin']);
 Route::post('/login', [AuthController::class, 'logIn']);
 Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:api');
 
@@ -29,24 +29,24 @@ Route::group([
 ], function () {
     Route::get('/', [CategoryController::class, 'index']);
     Route::get('/{id}', [CategoryController::class, 'show']);
-    Route::post('/', [CategoryController::class, 'store']);
-    Route::put('/{id}', [CategoryController::class, 'update']);
-    Route::delete('/{id}', [CategoryController::class, 'destroy']);
+    Route::post('/', [CategoryController::class, 'store'])->middleware(['auth:api', 'admin']);
+    Route::put('/{id}', [CategoryController::class, 'update'])->middleware(['auth:api', 'admin']);
+    Route::delete('/{id}', [CategoryController::class, 'destroy'])->middleware(['auth:api', 'admin']);
 });
 
-Route::post('/sendMail', [SendMailController::class, 'send']);
+Route::post('/sendMail', [SendMailController::class, 'send'])->middleware(['auth:api', 'admin']);
 
 Route::group([
     'prefix' => '/posts',
 ], function () {
     Route::get('/', [PostController::class, 'index']);
     Route::get('/{id}', [PostController::class, 'show']);
-    Route::get('/myPosts', [PostController::class, 'myPosts']);
-    Route::post('/', [PostController::class, 'store']);
-    Route::put('/{id}', [PostController::class, 'update']);
-    Route::delete('/{id}', [PostController::class, 'destroy']);
-    Route::get('/underReview', [PostController::class, 'indexUnderReviewPosts']);
-    Route::put('/updateStatus/{id}', [PostController::class, 'updatePostStatus']);
+    Route::get('/myPosts', [PostController::class, 'myPosts'])->middleware('auth:api');
+    Route::post('/', [PostController::class, 'store'])->middleware('auth:api');
+    Route::put('/{id}', [PostController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}', [PostController::class, 'destroy'])->middleware('auth:api');
+    Route::get('/underReview', [PostController::class, 'indexUnderReviewPosts'])->middleware(['auth:api', 'admin']);
+    Route::put('/updateStatus/{id}', [PostController::class, 'updatePostStatus'])->middleware(['auth:api', 'admin']);
 });
 
 Route::group([
@@ -54,16 +54,17 @@ Route::group([
 ], function () {
     Route::get('/', [ProfileController::class, 'index']);
     Route::get('/{id}', [ProfileController::class, 'show']);
-    Route::put('/{id}', [ProfileController::class, 'update']);
-    Route::delete('/{id}', [ProfileController::class, 'destroy']);
-    Route::delete('/deleteMyAccount', [ProfileController::class, 'destroyMyProfile']);
+    Route::put('/{id}', [ProfileController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}', [ProfileController::class, 'destroy'])->middleware(['auth:api', 'admin']);
+    Route::delete('/deleteMyAccount', [ProfileController::class, 'destroyMyProfile'])->middleware('auth:api');
 });
 
 Route::group([
     'prefix' => '/emails',
 ], function () {
-    Route::get('/', [EmailController::class, 'index']);
-    Route::get('/{id}', [EmailController::class, 'show']);
-    Route::put('/{id}', [EmailController::class, 'update']);
-    Route::delete('/{id}', [EmailController::class, 'destroy']);
+    Route::get('/', [EmailController::class, 'index'])->middleware(['auth:api', 'admin']);
+    Route::post('/', [EmailController::class, 'store']);
+    Route::get('/{id}', [EmailController::class, 'show'])->middleware(['auth:api', 'admin']);
+    Route::put('/{id}', [EmailController::class, 'update'])->middleware(['auth:api', 'admin']);
+    Route::delete('/{id}', [EmailController::class, 'destroy'])->middleware(['auth:api', 'admin']);
 });
