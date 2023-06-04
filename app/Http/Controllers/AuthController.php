@@ -70,9 +70,7 @@ class AuthController extends Controller {
     }
 
     public function logIn (Request $request) {
-
         $input = $request->all();
-        $user = auth()->user();
 
         // writing the rules to validate register data
         $rules = [
@@ -91,8 +89,8 @@ class AuthController extends Controller {
             );
         }
 
-        $input = request(['email', 'password']);
-        if (!auth()->attempt($input)) {
+        $cred = request(['email', 'password']);
+        if (!auth()->attempt($cred)) {
             return response()->json([
                 'message' => 'Unauthorized',
             ], 401);
